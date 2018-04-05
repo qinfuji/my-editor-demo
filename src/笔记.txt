@@ -1,0 +1,124 @@
+app的store结构
+
+{
+    pageid:{}
+}
+
+1、page页的store结构
+
+{
+   componentName1:{
+       children:[componentName2,....],
+       props1: any,
+       action:any,
+       style:any,
+   }
+
+   componentName2:{
+
+   }
+}
+
+
+组件分为容器组件，和非容器组件
+
+//普通组件
+class MyComponent extends Component{
+    static propTypes = {
+        name: PropTypes.string.isRequired,  //组件名称，当前页唯一
+  };
+}
+
+//容器组件，
+class MyContainerComponent extends MyComponent{
+
+}
+
+
+
+系统以页作为基本单位，从root节点通过props.children递归能够获取当前页所有的
+
+
+//每个页有自己的action , reduce , APP, 同样有自己的 action， reduce
+imports actions from "./actions";
+class PageControl{
+
+    construct(){
+        this.onclick = this.onclick.bind(this);
+    }
+
+    onclick(){
+
+    }
+}
+
+class Page extends Component{
+
+    static propType = {
+
+    }
+
+    render(){
+      
+    }
+}
+
+
+
+let mapStateToProps(state， onwerProps){
+    return {...state[onwerProps.name]} //直接通过当前也的唯一标示获取当前页的属性
+}
+//动作的action
+let mapDispatchToProps(state){
+    return 
+}
+
+connect(mapStateToProps , mapDispatchToProps)(Page);
+
+//通过拦截能够获取当前也上的所有组件？
+//如果组件实现了EditableComponent,子组件通过注册将自己注册到当前环境中
+class EditableProvider extends Component{
+   
+   private maskers = [];
+
+   registe(){
+       //分析当前页面上的所有节点
+   }
+
+   renderMarker(){
+       //绘制当前所有组件的遮罩层，在一个容器里完成所有的遮罩层处理
+       
+   }
+
+   render(){
+     register(); //分析并注册当前页面组件
+     return <div>
+             {this.props.children}
+             {renderMarker()}
+            </div>
+   }
+}
+
+
+//组件的遮罩层，每个遮罩层有两个事件,鼠标选择事件，鼠标右键事件
+//分析的时候通过之前绑定的node节点，获取当前绑定组件的位置信息，进行遮罩层定位。
+class Masker extends Component{
+    
+     
+
+     render(){
+         let style=null;
+         return <div></div>
+     }
+}
+
+<Masker refId=""  editinfo={{}}/>
+
+
+1、可编辑对象的展现形式就是一个当前组件的遮罩层。
+2、系统需要提供help通过当前组件获取可编辑对象的功能,怎么确定当前组件与可编辑组件的关系？
+   每个组件如果实现了可编辑接口？
+   或是我实现一个编辑的高阶组件？，
+   在整个环境初始化的时候需要将组件注册到当前的环境中去
+3、可编辑组件通过当前组件的ReactElement对象获取当前对象的唯一标示，通过唯一标示，从当前page的store中获取当前组件的state。
+
